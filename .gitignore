@@ -1,0 +1,52 @@
+# Excluir archivos y directorios generados automáticamente
+bin/
+obj/
+packages/
+
+# Excluir archivos de configuración local
+*.user
+*.suo
+*.cache
+
+# Excluir archivos de compilación
+*.dll
+*.exe
+
+# Excluir archivos de respaldo
+*~
+*.bak
+
+# Excluir archivos de registro
+*.log
+
+# Excluir archivos de configuración de Visual Studio
+.vs/
+*.vscode/
+
+# Excluir archivos de caché y temporales
+*.tmp
+*.temp
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.pgi
+*.pgs
+*.sbr
+*.sdf
+*.opensdf
+
+# Excluir archivos de análisis de código
+*.sln.docstates
