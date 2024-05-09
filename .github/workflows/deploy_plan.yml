@@ -9,7 +9,7 @@ on:
 jobs:
   publish:
     runs-on: windows-latest
-    environment: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ? 'production' : 'test' }}
+    environment: ${{ github.ref == 'refs/heads/main' ? 'production' : 'test' }}
 
     steps:
       - name: Checkout code
@@ -30,4 +30,4 @@ jobs:
           username: admin
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ${{ steps.build.outputs.publish_path }}
-          remote-dir: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ? '/services.iglesialasendaantigua.com' : '/test-services.iglesialasendaantigua.com' }}
+          remote-dir: ${{ github.ref == 'refs/heads/main' ? '/services.iglesialasendaantigua.com' : '/test-services.iglesialasendaantigua.com' }}
