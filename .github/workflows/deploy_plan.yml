@@ -1,0 +1,33 @@
+name: Publish to FTP on Push
+
+on:
+  push:
+    branches:
+      - main
+      - development      
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    environment: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ? 'production' : 'test' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: Build and publish
+        run: |
+          msbuild /p:Configuration=Release /p:OutputPath=./publish_output
+          echo "::set-output name=publish_path::$(pwd)/publish_output"
+
+      - name: Upload to FTP
+        uses: SamKirkland/FTP-Deploy-Action@3.1.1
+        with:
+          server: iglesiacristianabelen.com
+          username: admin
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ steps.build.outputs.publish_path }}
+          remote-dir: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' ? '/services.iglesialasendaantigua.com' : '/test-services.iglesialasendaantigua.com' }}
