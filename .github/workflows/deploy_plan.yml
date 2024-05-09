@@ -1,6 +1,8 @@
 name: Publish to FTP on Push
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - main
@@ -26,8 +28,8 @@ jobs:
       - name: Upload to FTP
         uses: SamKirkland/FTP-Deploy-Action@3.1.1
         with:
-          server: iglesiacristianabelen.com
-          username: admin
+          server: ${{ variables.FTP_SERVER }}
+          username: ${{ variables.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ${{ steps.build.outputs.publish_path }}
-          remote-dir: ${{ github.ref == 'refs/heads/main' ? '/services.iglesialasendaantigua.com' : '/test-services.iglesialasendaantigua.com' }}
+          remote-dir: ${{ variables.FTP_REMOTE_DIR }}
