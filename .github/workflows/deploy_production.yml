@@ -1,17 +1,15 @@
 name: Publish to FTP on Push
 
 on:
-  workflow_dispatch:
 
   push:
     branches:
-      - main
-      - development      
+      - main      
 
 jobs:
   publish:
     runs-on: windows-latest
-    environment: ${{ github.ref == 'refs/heads/main' ? 'production' : 'test' }}
+    environment: test
 
     steps:
       - name: Checkout code
@@ -28,8 +26,8 @@ jobs:
       - name: Upload to FTP
         uses: SamKirkland/FTP-Deploy-Action@3.1.1
         with:
-          server: ${{ variables.FTP_SERVER }}
-          username: ${{ variables.FTP_USERNAME }}
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ${{ steps.build.outputs.publish_path }}
-          remote-dir: ${{ variables.FTP_REMOTE_DIR }}
+          remote-dir: ${{ vars.FTP_REMOTE_DIR }}
