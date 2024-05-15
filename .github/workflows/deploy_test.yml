@@ -43,3 +43,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local_dir: _build/ # Should always end with /
           server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
+          secure: false
