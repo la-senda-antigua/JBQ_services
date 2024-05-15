@@ -2,9 +2,10 @@ name: Testing Deployment
 
 on:
   workflow_dispatch:
+
   push:
     branches:
-      - develop
+      - develop      
 
 jobs:
   publish:
@@ -14,6 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Restore NuGet packages
         run: nuget restore JBQ\JBQ\JBQ.csproj -PackagesDirectory packages
