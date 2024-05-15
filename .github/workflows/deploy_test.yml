@@ -36,10 +36,10 @@ jobs:
           echo "::set-output name=publish_path::$(pwd)/_build"
 
       - name: Upload via FTP
-        uses: airvzxf/ftp-deployment-action@latest
+        uses: dennisameling/ftp-upload-action@v1
         with:
           server: ${{ vars.FTP_SERVER }}
-          user: ${{ vars.FTP_USERNAME }}
+          username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: "./_build"
-          remote_dir: "${{ vars.FTP_REMOTE_DIR }}"            
+          local_dir: _build/ # Should always end with /
+          server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
