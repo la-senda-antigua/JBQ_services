@@ -37,11 +37,11 @@ jobs:
 
       - name: Upload to FTP
         run: |
-          $ftpServer = "ftp://${{ vars.FTP_SERVER }}"
-          $ftpUsername = "${{ vars.FTP_USERNAME }}"
-          $ftpPassword = "${{ secrets.FTP_PASSWORD }}" # Asumiendo que la contraseña es un secret por seguridad
+          $ftpServer = "ftp://iglesialasendaantigua.com"
+          $ftpUsername = "admin"
+          $ftpPassword = "7tisI@84" # Asumiendo que la contraseña es un secret por seguridad
           $localDir = "./_build"
-          $remoteDir = "${{ vars.FTP_REMOTE_DIR }}"
+          $remoteDir = "test-services.iglesialasendaantigua.com"
 
           # Instala WebClient para la transferencia de archivos
           $webClient = New-Object System.Net.WebClient
