@@ -20,11 +20,11 @@ jobs:
         uses: microsoft/setup-msbuild@v1.0.2
 
       - name: Restore NuGet packages
-        run: nuget restore JBQ\JBQ\JBQ.csproj
+        run: nuget restore JBQ/JBQ.sln -PackagesDirectory packages
 
       - name: Build and publish
         run: |
-          msbuild JBQ\JBQ\JBQ.csproj /p:Configuration=Release /p:OutputPath=./publish_output
+          msbuild JBQ/JBQ.sln /p:Configuration=Release /p:OutputPath=./publish_output
           echo "::set-output name=publish_path::$(pwd)/publish_output"
 
       - name: Upload to FTP
