@@ -16,12 +16,23 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1
+      
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+        
+      - name: Navigate to Workspace
+        run: cd $GITHUB_WORKSPACE
+  
+      - name: Create Build Directory
+        run: mkdir _build
+      
+      - name: Restore Packages
+        run: nuget restore JBQ\JBQ.sln
 
-      - name: Build and publish
+      - name: Build Solution
         run: |
-          nuget restore JBQ\JBQ\JBQ.csproj -PackagesDirectory packages
-          msbuild JBQ\JBQ\JBQ.csproj /p:Configuration=Release /p:OutputPath=./publish_output
+          msbuild.exe JBQ\JBQ.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
           echo "::set-output name=publish_path::$(pwd)/publish_output"
 
       - name: Upload to FTP
@@ -30,5 +41,5 @@ jobs:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ${{ steps.build.outputs.publish_path }}
+          local-dir: "./_build"        
           remote-dir: ${{ vars.FTP_REMOTE_DIR }}
