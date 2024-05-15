@@ -36,10 +36,24 @@ jobs:
           echo "::set-output name=publish_path::$(pwd)/_build"
 
       - name: Upload to FTP
-        uses: SamKirkland/FTP-Deploy-Action@3.1.1
-        with:
-          server: ${{ vars.FTP_SERVER }}
-          username: ${{ vars.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: "./_build"        
-          remote-dir: ${{ vars.FTP_REMOTE_DIR }}
+        run: |
+          $ftpServer = "ftp://${{ vars.FTP_SERVER }}"
+          $ftpUsername = "${{ vars.FTP_USERNAME }}"
+          $ftpPassword = "${{ secrets.FTP_PASSWORD }}" # Asumiendo que la contraseña es un secret por seguridad
+          $localDir = "./_build"
+          $remoteDir = "${{ vars.FTP_REMOTE_DIR }}"
+
+          # Instala WebClient para la transferencia de archivos
+          $webClient = New-Object System.Net.WebClient
+          $webClient.Credentials = New-Object System.Net.NetworkCredential($ftpUsername, $ftpPassword)
+
+          # Sube los archivos al servidor FTP
+          Get-ChildItem -Path $localDir -Recurse | 
+            Where-Object { !($_.PSIsContainer) } | 
+            ForEach-Object {
+              $localPath = $_.FullName
+              $remotePath = $remoteDir + $_.FullName.Substring($localDir.Length).Replace("\", "/")
+              "Subiendo $localPath a $ftpServer/$remotePath"
+              $uri = New-Object System.Uri("$ftpServer/$remotePath")
+              $webClient.UploadFile($uri, $localPath)
+            }
