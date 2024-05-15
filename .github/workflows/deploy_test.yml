@@ -18,9 +18,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
       
-      - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
-        
+      - name: Set NuGet Version
+        run: echo "NUGET_VERSION=5.x" >> $GITHUB_ENV
+       
       - name: Navigate to Workspace
         run: cd $GITHUB_WORKSPACE
   
