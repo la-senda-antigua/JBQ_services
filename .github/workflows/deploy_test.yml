@@ -35,25 +35,11 @@ jobs:
           msbuild.exe JBQ\JBQ.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
           echo "::set-output name=publish_path::$(pwd)/_build"
 
-      - name: Upload to FTP
-        run: |
-          $ftpServer = "ftp://iglesialasendaantigua.com"
-          $ftpUsername = "admin"
-          $ftpPassword = "7tisI@84" # Asumiendo que la contraseña es un secret por seguridad
-          $localDir = "./_build"
-          $remoteDir = "test-services.iglesialasendaantigua.com"
-
-          # Instala WebClient para la transferencia de archivos
-          $webClient = New-Object System.Net.WebClient
-          $webClient.Credentials = New-Object System.Net.NetworkCredential($ftpUsername, $ftpPassword)
-
-          # Sube los archivos al servidor FTP
-          Get-ChildItem -Path $localDir -Recurse | 
-            Where-Object { !($_.PSIsContainer) } | 
-            ForEach-Object {
-              $localPath = $_.FullName
-              $remotePath = $remoteDir + $_.FullName.Substring($localDir.Length).Replace("\", "/")
-              "Subiendo $localPath a $ftpServer/$remotePath"
-              $uri = New-Object System.Uri("$ftpServer/$remotePath")
-              $webClient.UploadFile($uri, $localPath)
-            }
+      - name: Upload via FTP
+        uses: airvzxf/ftp-deployment-action@latest
+        with:
+          server: ${{ vars.FTP_SERVER }}
+          user: ${{ vars.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local_dir: "./_build"
+          remote_dir: "${{ vars.FTP_REMOTE_DIR }}"            
