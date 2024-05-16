@@ -25,7 +25,7 @@ jobs:
         run: cd $GITHUB_WORKSPACE
   
       - name: Create Build Directory
-        run: mkdir _build
+        run: mkdir build
       
       - name: Restore Packages
         run: nuget restore JBQ\JBQ.sln
@@ -33,7 +33,7 @@ jobs:
       - name: Build Solution
         run: |
           msbuild.exe JBQ\JBQ.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-          echo "::set-output name=publish_path::$(pwd)/_build"
+          echo "::set-output name=publish_path::$(pwd)/build"
 
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
@@ -41,6 +41,6 @@ jobs:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: ./_build/ # Should always end with /
+          local_dir: build/ # Should always end with /
           server_dir: ./${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
           secure: false
