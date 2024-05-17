@@ -30,7 +30,7 @@ jobs:
       - name: Build Solution
         run: |
           msbuild.exe JBQ\JBQ.sln /nologo /nr:false /p:DeployOnBuild=true /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:DeleteExistingFiles=True /p:platform="Any CPU" /p:configuration="Release" /p:PublishUrl="../_build"
-          echo "::set-output name=publish_path::$(pwd)/build"
+          echo "::set-output name=publish_path::$(pwd)/_build"
 
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
