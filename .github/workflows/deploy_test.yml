@@ -35,7 +35,7 @@ jobs:
       - name: Verify build output
         run: |
           Write-Host "Verifying build output..."
-          Get-ChildItem -Path $(Build.SourcesDirectory)\build
+          Get-ChildItem -Path build
 
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
@@ -43,7 +43,7 @@ jobs:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: $(Build.SourcesDirectory)\build\ # Should always end with \
+          local_dir: build/ # Should always end with /
           server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /
           secure: false
           log_level: debug
