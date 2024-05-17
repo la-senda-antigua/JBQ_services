@@ -20,25 +20,22 @@ jobs:
       
       - name: Set NuGet Version
         run: echo "NUGET_VERSION=5.x" >> $GITHUB_ENV
-       
-      - name: Navigate to Workspace
-        run: cd $GITHUB_WORKSPACE
-  
+
       - name: Create Build Directory
-        run: mkdir build
+        run: New-Item -ItemType Directory -Path build
       
       - name: Restore Packages
         run: nuget restore JBQ\JBQ.sln
 
       - name: Build Solution
         run: |
-          msbuild.exe JBQ\JBQ.sln /p:OutDir=$(pwd)/build/
-          echo "::set-output name=publish_path::$(pwd)/build"
+          msbuild.exe JBQ\JBQ.sln /p:OutDir=$(Build.SourcesDirectory)\build\
+          echo "::set-output name=publish_path::$(Build.SourcesDirectory)\build"
 
       - name: Verify build output
         run: |
-          echo "Verifying build output..."
-          ls -l $(pwd)/build/
+          Write-Host "Verifying build output..."
+          Get-ChildItem -Path $(Build.SourcesDirectory)\build
 
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
@@ -46,7 +43,7 @@ jobs:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: ./build/ # Should always end with /
-          server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
+          local_dir: $(Build.SourcesDirectory)\build\ # Should always end with \
+          server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /
           secure: false
-          log_level: debug 
+          log_level: debug
