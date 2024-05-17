@@ -20,17 +20,14 @@ jobs:
       
       - name: Set NuGet Version
         run: echo "NUGET_VERSION=5.x" >> $GITHUB_ENV
-       
-      - name: Create Build Directory
-        run: mkdir build
-      
+             
       - name: Restore Packages
         run: nuget restore JBQ\JBQ.sln
 
       - name: Build Solution
         run: |
-          msbuild.exe JBQ\JBQ.sln /p:OutDir=$(pwd)/build/
-          echo "::set-output name=publish_path::$(pwd)/build"
+          msbuild.exe JBQ\JBQ.sln /p:Configuration=Release /p:OutputPath=./publish_output
+          echo "::set-output name=publish_path::$(pwd)/publish_output"
 
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
@@ -38,6 +35,6 @@ jobs:
           server: ${{ vars.FTP_SERVER }}
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local_dir: build/ # Should always end with /
-          server_dir: ./${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
+          local_dir: ${{ steps.build.outputs.publish_path }}/
+          server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
           secure: false
