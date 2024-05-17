@@ -35,6 +35,11 @@ jobs:
           msbuild.exe JBQ\JBQ.sln /p:OutDir=$(pwd)/build/
           echo "::set-output name=publish_path::$(pwd)/build"
 
+      - name: Verify build output
+        run: |
+          echo "Verifying build output..."
+          ls -l $(pwd)/build/
+
       - name: Upload via FTP
         uses: dennisameling/ftp-upload-action@v1
         with:
@@ -44,3 +49,4 @@ jobs:
           local_dir: ./build/ # Should always end with /
           server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
           secure: false
+          log_level: debug 
