@@ -36,5 +36,5 @@ jobs:
           username: ${{ vars.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local_dir: ${{ steps.build.outputs.publish_path }}/
-          server_dir: ${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
+          server_dir: /${{ vars.FTP_REMOTE_DIR }}/ # Should always end with /    
           secure: false
